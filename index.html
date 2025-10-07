@@ -1,50 +1,22 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Tyler the Creator Spotify 听众地图</title>
-    <!-- 引入 Vega, Vega-Lite, Vega-Embed -->
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-  </head>
-  <body>
-    <h2>Tyler the Creator 在澳大利亚的 Spotify 听众分布</h2>
-    <div id="vis"></div>
+<head>
+  <meta charset="utf-8">
+  <title>Tyler Spotify 听众地图</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+</head>
+<body>
 
-    <script type="text/javascript">
-      const spec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "width": 800,
-        "height": 500,
-        "projection": {"type": "mercator"},
-        "layer": [
-          {
-            "data": {
-              "url": "https://raw.githubusercontent.com/xwuu0082-cpu/tyler-aus-map/main/aus_states.json",
-              "format": {"type": "geojson"}
-            },
-            "mark": {"type": "geoshape", "fill": "#eeeeee", "stroke": "#888"}
-          },
-          {
-            "data": {
-              "url": "https://raw.githubusercontent.com/xwuu0082-cpu/tyler-aus-map/main/tyler_listeners_australia.csv"
-            },
-            "mark": {"type": "circle", "tooltip": true},
-            "encoding": {
-              "longitude": {"field": "lon", "type": "quantitative"},
-              "latitude": {"field": "lat", "type": "quantitative"},
-              "size": {"field": "listeners", "type": "quantitative", "title": "Listeners", "scale": {"range": [100, 2000]}},
-              "color": {"field": "listeners", "type": "quantitative", "scale": {"scheme": "orangered"}},
-              "tooltip": [
-                {"field": "city", "title": "City"},
-                {"field": "listeners", "title": "Listeners"}
-              ]
-            }
-          }
-        ]
-      };
-      vegaEmbed('#vis', spec);
-    </script>
-  </body>
+<h2>Tyler the Creator 在澳大利亚的 Spotify 听众分布</h2>
+<div id="tyler_map"></div>
+
+<script type="text/javascript">
+  vegaEmbed('#tyler_map', 'js/tyler_map.vg.json').then(function(result) {
+    // Vega view instance is result.view
+  }).catch(console.error);
+</script>
+
+</body>
 </html>
