@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tyler, The Creator in Australia — Data Visualisation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    :root { --bg:#f7f7f9; --card:#ffffff; --ink:#1b1f23; --muted:#6a737d; }
+    *{box-sizing:border-box}
+    body{margin:24px;background:var(--bg);color:var(--ink);font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Noto Sans, Apple Color Emoji, Segoe UI Emoji}
+    header, footer{max-width:1100px;margin:0 auto}
+    header h1{margin:0 0 8px 0;font-size:28px}
+    header p{margin:0;color:var(--muted)}
+    .grid{max-width:1100px;margin:22px auto;display:grid;gap:22px}
+    @media(min-width:1000px){ .grid{grid-template-columns: 1fr 1fr;} }
+    .card{background:var(--card);border-radius:16px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+    .card h2{margin:6px 0 12px 0;font-size:18px}
+    .story{grid-column: 1 / -1}
+    .meta{color:var(--muted);font-size:13px}
+    .controls{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+    .badge{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:10px;padding:2px 8px;font-size:12px;margin-left:6px}
+    .note{color:var(--muted);font-size:13px;margin-top:6px}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tyler, The Creator in Australia <span class="badge">HD-ready</span></h1>
+    <p>How musical style and lyric themes relate to Australian audience distribution across states.</p>
+  </header>
+
+  <main class="grid">
+    <section class="card story">
+      <h2>Story & Rationale</h2>
+      <p>This visual narrative focuses on Australia. It links Tyler’s evolving musical style (danceability, energy, valence) and lyric themes to audience distribution across Australian states. The audience is the average Australian listener; design emphasises readability, scannability, and minimal data-ink.</p>
+      <p class="meta">Data: simulated samples mirroring Spotify/Genius/Last.fm structures • Author: You • Year: 2025 • Campus: Australia</p>
+    </section>
+
+    <section class="card">
+      <div class="controls">
+        <h2 style="margin-right:auto">Musical Style (AUS Perception)</h2>
+        <label for="metricSel">Metric:</label>
+        <select id="metricSel">
+          <option>Danceability</option>
+          <option>Energy</option>
+          <option>Valence</option>
+        </select>
+      </div>
+      <div id="chart1"></div>
+      <p class="note">Interaction: use the selector to switch feature. Annotation marks highlight notable shifts between albums.</p>
+    </section>
+
+    <section class="card">
+      <h2>Lyric Themes & AUS Preference</h2>
+      <div id="chart2"></div>
+      <p class="note">Bars encode word frequency; opacity encodes Australian preference (popularity_AUS).</p>
+    </section>
+
+    <section class="card" style="grid-column:1 / -1">
+      <h2>Australian Audience by State</h2>
+      <div id="chart3"></div>
+      <p class="note">Proportional-symbol map using an Equal Earth projection centred on Australia; circle size = listeners, colour = plays. Labels use state abbreviations for legibility.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p class="meta">What/Why/How — What: audio features, lyric keywords, state audience metrics; Why: connect style & themes with local audience distribution; How: line/point chart + bar chart + proportional map (Vega-Lite v5), consistent typographic scale, whitespace, and figure-ground contrast. </p>
+  </footer>
+
+  <script>
+    // 1) Style chart with interactive metric selection + annotations
+    const baseStyleData = { "url":"tyler_audio_features_aus.json" };
+    function styleSpec(metric="Danceability"){
+      return {
+        "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+        "data": baseStyleData,
+        "transform":[{"filter": `datum.metric == "${metric}"`}],
+        "layer":[
+          {
+            "mark":{"type":"line","point":true},
+            "encoding":{
+              "x":{"field":"year","type":"temporal","title":"Release Year"},
+              "y":{"field":"value","type":"quantitative","title": metric},
+              "tooltip":[{"field":"album"},{"field":"year"},{"field":"value"}],
+              "color":{"value":"#1f77b4"}
+            }
+          },
+          {
+            "data":{"values":[
+              {"year":2019,"label":"IGOR shift"},
+              {"year":2021,"label":"CMIYGL push"}
+            ]},
+            "mark":{"type":"rule","strokeDash":[6,4],"color":"#9ca3af"},
+            "encoding":{"x":{"field":"year","type":"temporal"}}
+          },
+          {
+            "data":{"values":[
+              {"year":2019,"value":0.88,"text":"High Valence (IGOR)","dy":-10},
+              {"year":2021,"value":0.83,"text":"Energy peaks","dy":-10}
+            ]},
+            "transform":[{"filter": metric=="Valence" ? "datum.value >= 0.88" : metric=="Energy" ? "datum.value >= 0.83" : "datum.value >= 0.74"}],
+            "mark":{"type":"text","align":"left","dx":6,"fontSize":12,"color":"#374151"},
+            "encoding":{
+              "x":{"field":"year","type":"temporal"},
+              "y":{"field":"value","type":"quantitative"},
+              "text":{"field":"text"}
+            }
+          }
+        ]
+      }
+    }
+    const el1 = document.getElementById('chart1');
+    const sel = document.getElementById('metricSel');
+    function renderStyle(){ vegaEmbed(el1, styleSpec(sel.value), {actions:false}); }
+    sel.addEventListener('change', renderStyle);
+    renderStyle();
+
+    // 2) Lyric themes: frequency + AUS popularity via opacity
+    const spec2 = {
+      "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+      "data":{"url":"tyler_lyrics_aus.json"},
+      "mark":{"type":"bar","cornerRadiusEnd":4},
+      "encoding":{
+        "x":{"field":"word","type":"nominal","title":"Keyword","sort":"-y"},
+        "y":{"field":"count","type":"quantitative","title":"Frequency"},
+        "color":{"field":"album","type":"nominal","title":"Album"},
+        "opacity":{"field":"popularity_AUS","type":"quantitative","title":"AUS preference","scale":{"domain":[0.6,0.95]}},
+        "tooltip":[{"field":"album"},{"field":"word"},{"field":"count"},{"field":"popularity_AUS","title":"AUS preference"}]
+      }
+    };
+    vegaEmbed("#chart2", spec2, {actions:false});
+
+    // 3) Australia map: proportional symbols on world basemap centred on AUS
+    const spec3 = {
+      "$schema":"https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 1000,
+      "height": 520,
+      "projection":{"type":"equalEarth","center":[134,-25],"scale": 1200},
+      "layer":[
+        {
+          "data":{"url":"https://vega.github.io/vega-datasets/data/world-110m.json","format":{"type":"topojson","feature":"countries"}},
+          "mark":{"type":"geoshape","fill":"#f0f0f0","stroke":"#9ca3af"}
+        },
+        {
+          "data":{"url":"aus_audience_states.json"},
+          "mark":{"type":"circle","opacity":0.85,"stroke":"#333"},
+          "encoding":{
+            "longitude":{"field":"lon","type":"quantitative"},
+            "latitude":{"field":"lat","type":"quantitative"},
+            "size":{"field":"listeners","type":"quantitative","title":"Listeners"},
+            "color":{"field":"plays","type":"quantitative","title":"Plays"},
+            "tooltip":[{"field":"state"},{"field":"listeners"},{"field":"plays"},{"field":"top_song","title":"Top song"}]
+          }
+        },
+        {
+          "data":{"url":"aus_audience_states.json"},
+          "mark":{"type":"text","dy":-10,"fontSize":11,"fontWeight":"600","color":"#374151"},
+          "encoding":{
+            "longitude":{"field":"lon","type":"quantitative"},
+            "latitude":{"field":"lat","type":"quantitative"},
+            "text":{"field":"abbr"}
+          }
+        }
+      ]
+    };
+    vegaEmbed("#chart3", spec3, {actions:false});
+  </script>
+</body>
+</html>

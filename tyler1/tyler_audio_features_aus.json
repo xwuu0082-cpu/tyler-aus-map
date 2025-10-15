@@ -1,0 +1,56 @@
+[
+  {
+    "album": "Flower Boy",
+    "year": 2017,
+    "metric": "Danceability",
+    "value": 0.7
+  },
+  {
+    "album": "Flower Boy",
+    "year": 2017,
+    "metric": "Energy",
+    "value": 0.66
+  },
+  {
+    "album": "Flower Boy",
+    "year": 2017,
+    "metric": "Valence",
+    "value": 0.76
+  },
+  {
+    "album": "IGOR",
+    "year": 2019,
+    "metric": "Danceability",
+    "value": 0.79
+  },
+  {
+    "album": "IGOR",
+    "year": 2019,
+    "metric": "Energy",
+    "value": 0.71
+  },
+  {
+    "album": "IGOR",
+    "year": 2019,
+    "metric": "Valence",
+    "value": 0.88
+  },
+  {
+    "album": "Call Me If You Get Lost",
+    "year": 2021,
+    "metric": "Danceability",
+    "value": 0.74
+  },
+  {
+    "album": "Call Me If You Get Lost",
+    "year": 2021,
+    "metric": "Energy",
+    "value": 0.83
+  },
+  {
+    "album": "Call Me If You Get Lost",
+    "year": 2021,
+    "metric": "Valence",
+    "value": 0.82
+  }
+]

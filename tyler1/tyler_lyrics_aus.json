@@ -1,0 +1,44 @@
+[
+  {
+    "album": "Flower Boy",
+    "year": 2017,
+    "word": "love",
+    "count": 42,
+    "popularity_AUS": 0.82
+  },
+  {
+    "album": "Flower Boy",
+    "year": 2017,
+    "word": "dream",
+    "count": 26,
+    "popularity_AUS": 0.71
+  },
+  {
+    "album": "IGOR",
+    "year": 2019,
+    "word": "you",
+    "count": 110,
+    "popularity_AUS": 0.9
+  },
+  {
+    "album": "IGOR",
+    "year": 2019,
+    "word": "heart",
+    "count": 33,
+    "popularity_AUS": 0.76
+  },
+  {
+    "album": "Call Me If You Get Lost",
+    "year": 2021,
+    "word": "freedom",
+    "count": 40,
+    "popularity_AUS": 0.88
+  },
+  {
+    "album": "Call Me If You Get Lost",
+    "year": 2021,
+    "word": "journey",
+    "count": 24,
+    "popularity_AUS": 0.73
+  }
+]

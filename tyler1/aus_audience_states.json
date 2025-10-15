@@ -1,0 +1,62 @@
+[
+  {
+    "state": "New South Wales",
+    "abbr": "NSW",
+    "listeners": 82000,
+    "plays": 3150000,
+    "share": 0.34,
+    "top_song": "EARFQUAKE",
+    "lat": -33.8688,
+    "lon": 151.2093
+  },
+  {
+    "state": "Victoria",
+    "abbr": "VIC",
+    "listeners": 76000,
+    "plays": 2890000,
+    "share": 0.31,
+    "top_song": "See You Again",
+    "lat": -37.8136,
+    "lon": 144.9631
+  },
+  {
+    "state": "Queensland",
+    "abbr": "QLD",
+    "listeners": 52000,
+    "plays": 1880000,
+    "share": 0.18,
+    "top_song": "WUSYANAME",
+    "lat": -27.4698,
+    "lon": 153.0251
+  },
+  {
+    "state": "Western Australia",
+    "abbr": "WA",
+    "listeners": 28000,
+    "plays": 990000,
+    "share": 0.09,
+    "top_song": "I THINK",
+    "lat": -31.9523,
+    "lon": 115.8613
+  },
+  {
+    "state": "South Australia",
+    "abbr": "SA",
+    "listeners": 18000,
+    "plays": 640000,
+    "share": 0.05,
+    "top_song": "CORSO",
+    "lat": -34.9285,
+    "lon": 138.6007
+  },
+  {
+    "state": "Tasmania",
+    "abbr": "TAS",
+    "listeners": 9000,
+    "plays": 320000,
+    "share": 0.03,
+    "top_song": "EARFQUAKE",
+    "lat": -42.8821,
+    "lon": 147.3272
+  }
+]
